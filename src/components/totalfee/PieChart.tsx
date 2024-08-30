@@ -396,8 +396,31 @@ interface Subscription {
   modifiedDate: string;
 }
 
+// 동적으로 색상을 생성하는 함수
 const generateColors = (count: number): string[] => {
-  // ... (같은 코드 유지)
+  const baseColors = [
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56',
+    '#4BC0C0',
+    '#9966FF',
+    '#FF9F40',
+  ];
+  const colors: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    if (i < baseColors.length) {
+      colors.push(baseColors[i]);
+    } else {
+      // 기본 색상을 모두 사용한 경우, 랜덤 색상 생성
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 255);
+      const b = Math.floor(Math.random() * 255);
+      colors.push(`rgb(${r}, ${g}, ${b})`);
+    }
+  }
+
+  return colors;
 };
 
 const PieChart = () => {
