@@ -81,14 +81,15 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../libs/AxiosInstance';
 import * as S from './MyPage.Style';
 import BottomNavBar from '../../components/BottomBar/BottomNavBar';
-import MyPageTopBar from '../../components/topbar/MyPageTopBar';
+import MyPageTopBar from '../../components/TopBar/MyPageTopBar';
 
 interface UserProfile {
   profilePhotoUrl: string;
   username: string;
 }
 
-const defaultuser_image = 'https://i.ibb.co/xLv21hj/app-logo.png';
+const defaultuser_image =
+  'https://otti-bucket-2024.s3.ap-northeast-2.amazonaws.com/otti-image/otti.png';
 
 const Mypage: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile>({
