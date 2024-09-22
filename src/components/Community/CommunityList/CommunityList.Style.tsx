@@ -33,11 +33,10 @@ export const ListItem = styled.li`
   justify-content: space-between;
   background-color: #ffffff;
   border-radius: 12px;
-  padding-top: 18px;
+  padding-top: 15px;
   padding-left: 17px;
   padding-right: 17px;
   padding-bottom: 10px;
-  // box-shadow: 2px 2px 4px 0px rgba(0.4, 0.4, 0.4, 0.1);
   box-shadow: 0px 0px 3px 2px #ddd;
   border: 1px solid #ddd;
   width: 100%;
@@ -58,12 +57,14 @@ export const PlatformImg = styled.img`
   height: 100%;
   object-fit: cover;
   border-radius: 50px;
+  margin-top: 6px;
 `;
 
 export const ContentWrapper = styled.div`
   flex: 1;
   min-width: 0;
   text-align: left;
+  margin-top: 3px;
 `;
 
 export const Title = styled.h3`
@@ -105,29 +106,31 @@ export const Description = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 4px;
 `;
 
 export const CommentWrapper = styled.div`
   display: flex;
-  // align-items: center;
-  margin-left: 218px;
-  padding-top: 5px;
+  justify-content: flex-end;
   flex-shrink: 0;
+  text-align: right;
 `;
 
 export const CountWrapper = styled.div`
-  margin-right: 10px;
-  // align-items: center;
+  padding-left: 10px;
+  // text-align: right;
 `;
 
 export const CommentCount = styled.span`
-  margin-left: 4px;
+  padding-right: 4px;
+  padding-left: 4px;
   font-size: 14px;
   color: #757575;
 `;
 
 export const ViewCount = styled.span`
-  margin-left: 4px;
+  padding-right: 4px;
+  padding-left: 4px;
   font-size: 14px;
   color: #757575;
 `;

@@ -11,6 +11,8 @@ import {
   ChartOptions,
   TooltipItem,
 } from 'chart.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -34,6 +36,7 @@ interface Subscription {
   modifiedDate: string;
 }
 
+// 동적으로 색상을 생성하는 함수
 const generateColors = (count: number): string[] => {
   const baseColors = [
     '#FF6384',
@@ -62,20 +65,18 @@ const generateColors = (count: number): string[] => {
 
 const PieChart = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [totalPayment, setTotalPayment] = useState<number>(0); // totalPayment -> totalAmount로 변수명 통일
+  const [totalPayment, setTotalPayment] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
         setIsLoading(true);
-
-        // /api/subscription/user로부터 구독 데이터 가져오기
         const response = await axiosInstance.get('/api/subscription/user');
         const fetchedSubscriptions: Subscription[] = response.data;
         setSubscriptions(fetchedSubscriptions);
       } catch (error) {
-        console.error('구독 데이터를 불러오는 중 오류 발생:', error);
+        toast.error('구독 데이터를 불러오는 중 오류 발생');
       } finally {
         setIsLoading(false);
       }
@@ -83,13 +84,12 @@ const PieChart = () => {
 
     const fetchTotalPayment = async () => {
       try {
-        // /api/subscription/total-payment로부터 총 구독료 가져오기
         const response = await axiosInstance.get(
           '/api/subscription/total-payment',
         );
-        setTotalPayment(response.data.totalPayment); // totalPayment -> totalAmount로 변수명 통일
+        setTotalPayment(response.data.totalPayment);
       } catch (error) {
-        console.error('총 구독료를 불러오는 중 오류 발생:', error);
+        toast.error('총 구독료를 불러오는 중 오류 발생');
       }
     };
 

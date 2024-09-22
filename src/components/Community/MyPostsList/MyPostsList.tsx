@@ -1,25 +1,22 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from './CommunityList.Style';
-import { FaRegComment } from 'react-icons/fa';
-import { PiEyesFill } from 'react-icons/pi';
+import * as S from './MyPostsList.Style';
 
 // Post 타입 정의
 export interface Post {
   id: number;
   title: string;
   content: string;
-  commentCount: number;
   userName: string;
   ottImage: string;
   createdDate: string;
 }
 
-interface CommunityListProps {
+interface MyPostsListProps {
   posts: Post[]; // Post 배열을 props로 받음
 }
 
-const CommunityList: React.FC<CommunityListProps> = ({ posts = [] }) => {
+const MyPostsList: React.FC<MyPostsListProps> = ({ posts = [] }) => {
   const navigate = useNavigate();
 
   // 게시글 클릭 시 상세 페이지로 이동
@@ -31,7 +28,7 @@ const CommunityList: React.FC<CommunityListProps> = ({ posts = [] }) => {
   const timeOptions: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false, // 24시간 형식
+    hour12: false, // 24시간 형식 사용
   };
 
   return (
@@ -60,12 +57,6 @@ const CommunityList: React.FC<CommunityListProps> = ({ posts = [] }) => {
                 <S.Description>{post.content}</S.Description>
               </S.ContentWrapper>
             </S.FlexWrap>
-            <S.CommentWrapper>
-              <S.CountWrapper>
-                <FaRegComment size={13} color="#757575" />
-                <S.CommentCount>{post.commentCount}</S.CommentCount>
-              </S.CountWrapper>
-            </S.CommentWrapper>
           </S.ListItem>
         </S.ListItemWrapper>
       ))}
@@ -73,4 +64,4 @@ const CommunityList: React.FC<CommunityListProps> = ({ posts = [] }) => {
   );
 };
 
-export default CommunityList;
+export default MyPostsList;

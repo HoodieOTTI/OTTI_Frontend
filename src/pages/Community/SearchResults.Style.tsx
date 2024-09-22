@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  // align-items: center;
   width: 100%;
   max-width: 375px;
   height: 100vh;
@@ -16,15 +17,18 @@ export const TitleWrapper = styled.header`
   border-bottom: 0.5px solid black;
 `;
 
-export const CommunityPostWrapper = styled.div`
-  border-bottom: 1px solid #ddd;
-`;
-
-export const PageWrapper = styled.div`
-  max-width: 375px;
-  box-sizing: border-box;
-  padding: 0px 20px;
-  margin-top: 20px;
+export const SearchResults = styled.div`
+  // margin: 0 auto;
+  position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 375px;
+  height: 100vh;
+  padding: 0 10px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 50;
 `;
