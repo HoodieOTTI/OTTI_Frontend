@@ -1,376 +1,3 @@
-// // payment 만 가져옴
-// import React, { useState, useEffect } from 'react';
-// import {
-//   Calendar as BigCalendar,
-//   momentLocalizer,
-//   Components,
-// } from 'react-big-calendar';
-// import { RRule } from 'rrule';
-// import moment from 'moment-timezone';
-// import 'moment/locale/ko';
-// import 'react-big-calendar/lib/css/react-big-calendar.css';
-// import axiosInstance from '../../libs/AxiosInstance';
-// import * as S from './Calender.Style';
-// import Popup from './Popup';
-
-// moment.tz.setDefault('America/Los_Angeles');
-// moment.locale('ko');
-// const localizer = momentLocalizer(moment);
-
-// interface IEvent {
-//   start: Date;
-//   end: Date;
-//   title: string;
-//   color: string;
-//   id: number; // id를 추가
-// }
-
-// interface IPayment {
-//   paymentDate: number; // 'dd' 형식으로 전달받음
-//   ottName: string;
-//   id: number; // API 응답에 id가 포함되어야 함
-// }
-
-// const Calendar: React.FC = () => {
-//   const [currentMonth, setCurrentMonth] = useState(moment().format('M월'));
-//   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
-//   const [events, setEvents] = useState<IEvent[]>([]);
-
-//   useEffect(() => {
-//     const fetchEvents = async () => {
-//       try {
-//         const response = await axiosInstance.get('/api/subscription/user'); // API 요청
-//         const subscriptions: IPayment[] = response.data;
-
-//         const eventList = subscriptions.flatMap((subscription) => {
-//           const events = createRecurringEvents(
-//             subscription.paymentDate,
-//             subscription.ottName,
-//             getRandomColor(),
-//             subscription.id, // id를 추가
-//           );
-
-//           return events;
-//         });
-//         setEvents(eventList);
-//       } catch (error) {
-//         console.error('Error fetching subscription data:', error);
-//       }
-//     };
-
-//     fetchEvents();
-//   }, []);
-
-//   const createRecurringEvents = (
-//     dayOfMonth: number,
-//     title: string,
-//     color: string,
-//     id: number, // id를 추가
-//   ): IEvent[] => {
-//     const startOfMonth = moment().startOf('month').tz('America/Los_Angeles');
-//     const endOfMonth = moment().endOf('month').tz('America/Los_Angeles');
-
-//     const rule = new RRule({
-//       freq: RRule.MONTHLY,
-//       dtstart: startOfMonth
-//         .clone()
-//         .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-//         .toDate(),
-//       bymonthday: dayOfMonth, // 매월 해당 일자로 이벤트 생성
-//       interval: 1,
-//       until: endOfMonth
-//         .clone()
-//         .set({ hour: 23, minute: 59, second: 59, millisecond: 999 })
-//         .toDate(), // 날짜의 끝 시점을 23:59:59로 설정
-//     });
-
-//     const dates = rule.all();
-
-//     return dates.map((date) => ({
-//       start: new Date(moment(date).startOf('day').toDate()), // 시작 시간을 00:00로 설정
-//       end: new Date(moment(date).endOf('day').toDate()), // 종료 시간을 23:59로 설정
-//       title,
-//       color,
-//       id, // id 추가
-//     }));
-//   };
-
-//   const getRandomColor = (): string => {
-//     const letters = '0123456789ABCDEF';
-//     let color = '#';
-//     for (let i = 0; i < 6; i++) {
-//       color += letters[Math.floor(Math.random() * 16)];
-//     }
-//     return color;
-//   };
-
-//   const DateCellWrapper: Components['dateCellWrapper'] = ({
-//     children,
-//     value,
-//   }) => {
-//     const event = events.find((evt) => moment(evt.start).isSame(value, 'day'));
-
-//     return React.cloneElement(
-//       React.Children.only(children) as React.ReactElement,
-//       {
-//         style: {
-//           ...((children as React.ReactElement).props.style || {}),
-//           position: 'relative',
-//           cursor: event ? 'pointer' : 'default',
-//           ...(event && {
-//             '&::after': {
-//               content: '""',
-//               position: 'absolute',
-//               bottom: '2px',
-//               left: '50%',
-//               transform: 'translateX(-50%)',
-//               width: '80%',
-//               height: '2px',
-//               backgroundColor: event.color,
-//             },
-//           }),
-//         },
-//       },
-//     );
-//   };
-
-//   const handleNavigate = (newDate: Date) => {
-//     setCurrentMonth(moment(newDate).format('M월'));
-//   };
-
-//   const handleSelectEvent = (event: IEvent) => {
-//     setSelectedEvent(event);
-//   };
-
-//   const EventComponent = ({ event }: { event: IEvent }) => (
-//     <div
-//       style={{ backgroundColor: event.color, height: '100%', width: '100%' }}
-//     />
-//   );
-
-//   return (
-//     <S.CalendarCont>
-//       <S.MonthTit>{currentMonth}</S.MonthTit>
-//       <S.CalendarWrap>
-//         <BigCalendar
-//           localizer={localizer}
-//           events={events}
-//           startAccessor="start"
-//           endAccessor="end"
-//           style={{ height: 230 }}
-//           views={['month']}
-//           toolbar={false}
-//           onNavigate={handleNavigate}
-//           onSelectEvent={handleSelectEvent}
-//           components={{
-//             dateCellWrapper: DateCellWrapper,
-//             event: EventComponent,
-//           }}
-//           formats={{
-//             monthHeaderFormat: 'M월',
-//             weekdayFormat: (date: Date) => moment(date).format('ddd'),
-//             dayFormat: (date: Date) => moment(date).format('D'),
-//           }}
-//         />
-//       </S.CalendarWrap>
-//       {selectedEvent && (
-//         <Popup
-//           event={selectedEvent}
-//           onClose={() => setSelectedEvent(null)}
-//           id={selectedEvent.id}
-//         />
-//       )}
-//     </S.CalendarCont>
-//   );
-// };
-
-// export default Calendar;
-
-
-// // 행 늘이기
-// import React, { useState, useEffect } from 'react';
-// import {
-//   Calendar as BigCalendar,
-//   momentLocalizer,
-//   Components,
-// } from 'react-big-calendar';
-// import { RRule } from 'rrule';
-// import moment from 'moment-timezone';
-// import 'moment/locale/ko';
-// import 'react-big-calendar/lib/css/react-big-calendar.css';
-// import axiosInstance from '../../libs/AxiosInstance';
-// import * as S from './Calender.Style';
-// import Popup from './Popup';
-
-// moment.tz.setDefault('America/Los_Angeles');
-// moment.locale('ko');
-// const localizer = momentLocalizer(moment);
-
-// interface IEvent {
-//   start: Date;
-//   end: Date;
-//   title: string;
-//   color: string;
-//   id: number;
-//   ottName: string;
-// }
-
-// interface IPayment {
-//   paymentDate: number;
-//   ottName: string;
-//   id: number;
-// }
-
-// const Calendar: React.FC = () => {
-//   const [currentMonth, setCurrentMonth] = useState(moment().format('M월'));
-//   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
-//   const [events, setEvents] = useState<IEvent[]>([]);
-
-//   useEffect(() => {
-//     const fetchEvents = async () => {
-//       try {
-//         const response = await axiosInstance.get('/api/subscription/user');
-//         const subscriptions: IPayment[] = response.data;
-
-//         const eventList = subscriptions.flatMap((subscription) =>
-//           createRecurringEvents(
-//             subscription.paymentDate,
-//             subscription.ottName,
-//             '#3174ad',
-//             subscription.id,
-//           ),
-//         );
-//         setEvents(eventList);
-//       } catch (error) {
-//         console.error('Error fetching subscription data:', error);
-//       }
-//     };
-
-//     fetchEvents();
-//   }, []);
-
-//   const createRecurringEvents = (
-//     dayOfMonth: number,
-//     ottName: string,
-//     color: string,
-//     id: number,
-//   ): IEvent[] => {
-//     const startOfMonth = moment().startOf('month').tz('America/Los_Angeles');
-//     const endOfMonth = moment().endOf('month').tz('America/Los_Angeles');
-
-//     const rule = new RRule({
-//       freq: RRule.MONTHLY,
-//       dtstart: startOfMonth
-//         .clone()
-//         .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-//         .toDate(),
-//       bymonthday: dayOfMonth,
-//       interval: 1,
-//       until: endOfMonth
-//         .clone()
-//         .set({ hour: 23, minute: 59, second: 59, millisecond: 999 })
-//         .toDate(),
-//     });
-
-//     const dates = rule.all();
-
-//     return dates.map((date) => ({
-//       start: new Date(moment(date).startOf('day').toDate()),
-//       end: new Date(moment(date).endOf('day').toDate()),
-//       title: ottName,
-//       color,
-//       id,
-//       ottName,
-//     }));
-//   };
-
-//   const DateCellWrapper: Components['dateCellWrapper'] = ({
-//     children,
-//     value,
-//   }) => {
-//     const dayEvents = events.filter((evt) =>
-//       moment(evt.start).isSame(value, 'day'),
-//     );
-
-//     return React.cloneElement(
-//       React.Children.only(children) as React.ReactElement,
-//       {
-//         style: {
-//           ...((children as React.ReactElement).props.style || {}),
-//           position: 'relative',
-//           height: `${Math.max(80, 80 + (dayEvents.length - 1) * 20)}px`,
-//         },
-//       },
-//     );
-//   };
-
-//   const handleNavigate = (newDate: Date) => {
-//     setCurrentMonth(moment(newDate).format('M월'));
-//   };
-
-//   const handleSelectEvent = (event: IEvent) => {
-//     setSelectedEvent(event);
-//   };
-
-//   const EventComponent = ({ event }: { event: IEvent }) => (
-//     <div
-//       style={{
-//         backgroundColor: event.color,
-//         // height: '10px',
-//         // width: '90%',
-//         margin: '0px auto',
-//         // borderRadius: '12px',
-//         overflow: 'hidden',
-//         whiteSpace: 'nowrap',
-//         // textOverflow: 'ellipsis',
-//         // fontSize: '12px',
-//         // color: 'white',
-//         textAlign: 'center',
-//         display: 'flex',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//       }}
-//     >
-//       <span style={{ marginRight: '4px' }}>{event.ottName}</span>
-//     </div>
-//   );
-
-//   return (
-//     <S.CalendarCont>
-//       <S.MonthTit>{currentMonth}</S.MonthTit>
-//       <S.CalendarWrap>
-//         <BigCalendar
-//           localizer={localizer}
-//           events={events}
-//           startAccessor="start"
-//           endAccessor="end"
-//           style={{ height: 'auto', minHeight: '300px' }}
-//           views={['month']}
-//           toolbar={false}
-//           onNavigate={handleNavigate}
-//           onSelectEvent={handleSelectEvent}
-//           components={{
-//             dateCellWrapper: DateCellWrapper,
-//             event: EventComponent,
-//           }}
-//           formats={{
-//             monthHeaderFormat: 'M월',
-//             weekdayFormat: (date: Date) => moment(date).format('ddd'),
-//             dayFormat: (date: Date) => moment(date).format('D'),
-//           }}
-//         />
-//       </S.CalendarWrap>
-//       {selectedEvent && (
-//         <Popup event={selectedEvent} onClose={() => setSelectedEvent(null)} />
-//       )}
-//     </S.CalendarCont>
-//   );
-// };
-
-// export default Calendar;
-
-
-// id 깡코드
 import React, { useState, useEffect } from 'react';
 import {
   Calendar as BigCalendar,
@@ -387,8 +14,11 @@ import Popup from './Popup';
 
 moment.tz.setDefault('America/Los_Angeles');
 moment.locale('ko');
+
+// 로컬라이저 moment로 초기화
 const localizer = momentLocalizer(moment);
 
+// Subscription 데이터 구조 정의
 interface Subscription {
   id: number;
   name: string;
@@ -409,6 +39,7 @@ interface Subscription {
   modifiedDate: string;
 }
 
+// 이벤트 구조 정의
 interface IEvent {
   start: Date;
   end: Date;
@@ -418,50 +49,56 @@ interface IEvent {
   ottName: string;
 }
 
-const Calendar: React.FC = () => {
+// Calendar 컴포넌트 정의
+const Calendar = () => {
+  // 현재 표시되는 달 상태 관리
   const [currentMonth, setCurrentMonth] = useState(moment().format('M월'));
+
+  // 선택된 이벤트 상태 관리
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
+
+  // 캘린더에 표시될 이벤트 목록 상태 관리
   const [events, setEvents] = useState<IEvent[]>([]);
 
+  // 컴포넌트 마운트시, 구독 정보를 가져와 이벤트 목록 설정
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // 여러 구독 정보를 가져오기 위해 여러 번의 API 호출을 수행합니다.
-        // 실제 사용 시에는 이 부분을 동적으로 구성해야 합니다.
-        const subscriptionIds = [1, 2, 3, 4, 5, 6, 7]; // 실제 ID로 교체해야 합니다.
-        const subscriptionPromises = subscriptionIds.map(id => 
-          axiosInstance.get<Subscription>(`/api/subscription/${id}`)
+        const response = await axiosInstance.get<Subscription[]>(
+          '/api/subscription/user',
         );
-        
-        const responses = await Promise.all(subscriptionPromises);
-        const subscriptions = responses.map(response => response.data);
+        const subscriptions = response.data;
 
+        // 구독 이벤트 생성
         const eventList = subscriptions.flatMap((subscription) =>
           createRecurringEvents(
             subscription.paymentDate,
             subscription.ott.name,
-            '#3174ad',
+            '#333',
             subscription.id,
           ),
         );
         setEvents(eventList);
       } catch (error) {
-        console.error('Error fetching subscription data:', error);
+        console.error('구독 정보 불러오기 실패:', error);
       }
     };
 
     fetchEvents();
   }, []);
 
+  // 매월 반복되는 이벤트 생성 함수
   const createRecurringEvents = (
     dayOfMonth: number,
     ottName: string,
     color: string,
     id: number,
   ): IEvent[] => {
+    // 현재 월 시작과 끝
     const startOfMonth = moment().startOf('month').tz('America/Los_Angeles');
     const endOfMonth = moment().endOf('month').tz('America/Los_Angeles');
 
+    // 반복 규칙 적용한 이벤트 생성
     const rule = new RRule({
       freq: RRule.MONTHLY,
       dtstart: startOfMonth
@@ -476,22 +113,26 @@ const Calendar: React.FC = () => {
         .toDate(),
     });
 
+    // 모든 날짜 가져오기
     const dates = rule.all();
 
+    // 각 날짜에 대한 이벤트 객체 생성
     return dates.map((date) => ({
       start: new Date(moment(date).startOf('day').toDate()),
       end: new Date(moment(date).endOf('day').toDate()),
-      title: ottName,
+      title: ottName, // OTT 이름 -> 이벤트 제목
       color,
       id,
       ottName,
     }));
   };
 
+  // 날짜 셀 래퍼 컴포넌트
   const DateCellWrapper: Components['dateCellWrapper'] = ({
     children,
     value,
   }) => {
+    // 현재 날짜에 해당하는 이벤트를 필터링
     const dayEvents = events.filter((evt) =>
       moment(evt.start).isSame(value, 'day'),
     );
@@ -502,25 +143,27 @@ const Calendar: React.FC = () => {
         style: {
           ...((children as React.ReactElement).props.style || {}),
           position: 'relative',
-          height: `${Math.max(80, 80 + (dayEvents.length - 1) * 20)}px`,
+          height: `${Math.max(80, 80 + (dayEvents.length - 1) * 20)}px`, // 이벤트 개수에 따라 셀 높이 조정
         },
       },
     );
   };
 
+  // 날짜 변경 시 현재 월을 업데이트
   const handleNavigate = (newDate: Date) => {
     setCurrentMonth(moment(newDate).format('M월'));
   };
 
+  // 이벤트 선택 시 선택된 이벤트를 상태로 설정
   const handleSelectEvent = (event: IEvent) => {
     setSelectedEvent(event);
   };
 
+  // 이벤트 컴포넌트 렌더링
   const EventComponent = ({ event }: { event: IEvent }) => (
     <div
       style={{
         backgroundColor: event.color,
-        // height: '50px',
         margin: '0px auto',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -530,7 +173,15 @@ const Calendar: React.FC = () => {
         justifyContent: 'center',
       }}
     >
-      <span style={{ marginRight: '3px', padding: '1px' }}>{event.ottName}</span>
+      <span
+        style={{
+          padding: '1px',
+          fontWeight: '400',
+          fontSize: '8px',
+        }}
+      >
+        {event.ottName}
+      </span>
     </div>
   );
 
@@ -543,7 +194,7 @@ const Calendar: React.FC = () => {
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 'auto', minHeight: '300px' }}
+          style={{ minHeight: '330px', maxHeight: 'auto' }}
           views={['month']}
           toolbar={false}
           onNavigate={handleNavigate}
@@ -559,6 +210,7 @@ const Calendar: React.FC = () => {
           }}
         />
       </S.CalendarWrap>
+      {/* 선택된 이벤트가 있을 경우 팝업 표시 */}
       {selectedEvent && (
         <Popup event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
@@ -567,5 +219,3 @@ const Calendar: React.FC = () => {
 };
 
 export default Calendar;
-
-
